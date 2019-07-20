@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import './question.dart';
+import './quiz.dart';
+import './result.dart';
 
 // void main(){
 //   runApp(MyApp()); // a "new" object of the class MyApp
@@ -20,55 +21,49 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   var _questionIndex = 0;
 
+  final _questions = const [
+    {
+      "questionText": "What's your favourite colour?",
+      "answers": ["Black", "Red", "Green", "Yellow"],
+    },
+    {
+      "questionText": "What's your favourite animal?",
+      "answers": ["Lion", "Snake", "Rabbit", "Elephant"],
+    },
+    {
+      "questionText": "What's your favourite team?",
+      "answers": ["Barcelona", "Bayern", "Aresenal", "Man City"],
+    },
+  ];
+
   void _answerQuestion() {
     // setState does not re render the whole UI but only the concerned widget...
     setState(() {
       _questionIndex = _questionIndex + 1;
     });
     print(_questionIndex);
+    if (_questionIndex < _questions.length) {
+      print("We have more questions!");
+    } else {
+      print("No more questions!");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    var questions = [
-      "What's your favourite colour?",
-      "What's your favourite animal?",
-    ];
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text("My First App"),
+          title: Text("Quiz App"),
         ),
-        body: Column(
-          children: [
-            // We created our own widget Question here
-            // Makes it easier to manage the code, helps with performance since makes the code more efficient
-            Question(
-              questions[_questionIndex],
-            ),
-            RaisedButton(
-              child: Text("Answer 1"),
-              onPressed:
-                  _answerQuestion, // By removing the paranthesis, we are passing the pointer / name
-              // to the function so that it (flutter) can execute and not us while we are passing the fn
-            ),
-            RaisedButton(
-              child: Text("Answer 2"),
-              onPressed: () => {
-                // ...
-                print("Answer 2 is chosen...")
-              }, // Anonymous function...
-            ),
-            RaisedButton(
-              child: Text("Answer 3"),
-              onPressed: _answerQuestion,
-            ),
-            RaisedButton(
-              child: Text("Answer 4"),
-              onPressed: _answerQuestion,
-            ),
-          ],
-        ), // body only takes one widget
+        // Fancy way of if-else block (? - if and : - else)
+        body: _questionIndex < _questions.length
+            ? Quiz(
+                answerQuestion: _answerQuestion,
+                questions: _questions,
+                questionIndex: _questionIndex,
+              )
+            : Result(), // body only takes one widget
       ),
     );
   }
