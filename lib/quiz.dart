@@ -38,8 +38,10 @@ class Quiz extends StatelessWidget {
             ),*/
 
         // '...' does is spreads the list. That is takes all the values in the list and adds/spreads them individually
-        ...(questions[questionIndex]["answers"] as List<String>).map((answer) {
-          return Answer(answerQuestion, answer);
+        ...(questions[questionIndex]["answers"] as List<Map<String, Object>>).map((answer) {
+          // So now pointer is passed in form of an anonymous function so that we can pass arguments through answerQuestion() so 
+          // answerQuestion() will be executed but only when anonymous function is executed. 
+          return Answer(() => answerQuestion(answer["score"]), answer['text']);
         }).toList(),
       ],
     );
